@@ -17,7 +17,7 @@ def print_if(s, f):
         if f(item):
             print(item)
 
-print_if([3, 4, 5, 6], lambda x: x > 4)
+
 
 
 def close(s, k):
@@ -52,7 +52,7 @@ def close_list(s, k):
     >>> close_list(t, 2)  # 2, 3, 4, and 5 are all within 2 of their index
     [2, 4, 3, 5]
     """
-    return [___ for i in range(len(s)) if ___]
+    return [s[i] for i in range(len(s)) if abs(s[i]-i)<=k]
 
 
 from math import sqrt
@@ -68,7 +68,9 @@ def squares(s):
     >>> squares(seq)
     []
     """
-    return [___ for n in s if ___]
+    return [round(sqrt(n)) for n in s if sqrt(n)/round(sqrt(n))==1.0]
+
+
 
 
 def double_eights(n):
@@ -92,7 +94,12 @@ def double_eights(n):
     >>> check(LAB_SOURCE_FILE, 'double_eights', ['While', 'For'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    if n<=10:
+        return False
+    if n%10==(n//10)%10:
+        return True
+    return double_eights(n//10)
+    
 
 
 def make_onion(f, g):
@@ -121,10 +128,18 @@ def make_onion(f, g):
     """
     def can_reach(x, y, limit):
         if limit < 0:
-            return ____
+            return False
         elif x == y:
-            return ____
+            return True
         else:
-            return can_reach(____, ____, limit - 1) or can_reach(____, ____, limit - 1)
+            return can_reach(f(x), y, limit - 1) or can_reach(g(x), y, limit - 1)
     return can_reach
+    
+        
+up = lambda x: x + 1
+double = lambda y: y * 2
+print(make_onion(up, double)(5,25,4))
+
+
+
 
