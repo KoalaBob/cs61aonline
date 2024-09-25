@@ -40,9 +40,6 @@ def close(s, k):
     return count
 
 
-'hello'
-
-"i love bob"
 
 def close_list(s, k):
     """Return a list of the elements of s that are within k of their index.
