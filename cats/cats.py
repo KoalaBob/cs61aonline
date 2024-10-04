@@ -185,7 +185,36 @@ def autocorrect(typed_word, word_list, diff_function, limit):
     'testing'
     """
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
+    if typed_word in word_list:
+        return typed_word
+    # mistake=limit
+    # finalword=typed_word
+    # possiblewords=[]
+    # for eachword in word_list:
+    #     newmistake=abs(diff_function(typed_word, eachword, limit))
+    #     print('this is newmistake', newmistake)
+    #     if newmistake<mistake:
+    #         mistake=newmistake
+    #         finalword=eachword
+    #     if newmistake==mistake:
+    #         possiblewords+[eachword]
+    # print('this is possiblewords',possiblewords)
+    # if len(possiblewords)==0:
+    #     return finalword
+    # return possiblewords[0]
+    all_diff={}
+    for eachword in word_list:
+        new_diff=abs(diff_function(typed_word, word_list, limit))
+        if new_diff<=limit:
+            all_diff[eachword]=new_diff
+    return 'this is all_diff', all_diff
+    smallest_error=min(all_diff.values())
+    for K in {key: value for key, value in all_diff if value==smallest_error}:
+        return K
+
+
+print(autocorrect('stilter', ['modernizer', 'posticum', 'undiscernible', 'heterotrophic', 'waller', 'marque', 'dephosphorization'], lambda x, y, lim: min(lim + 1, abs(len(x) - len(y))), 1))
+
     # END PROBLEM 5
 
 
