@@ -204,16 +204,17 @@ def autocorrect(typed_word, word_list, diff_function, limit):
     # return possiblewords[0]
     all_diff={}
     for eachword in word_list:
-        new_diff=abs(diff_function(typed_word, word_list, limit))
+        new_diff=abs(diff_function(typed_word, eachword, limit))
         if new_diff<=limit:
             all_diff[eachword]=new_diff
-    return 'this is all_diff', all_diff
+    if len(all_diff)==0:
+        return typed_word
     smallest_error=min(all_diff.values())
-    for K in {key: value for key, value in all_diff if value==smallest_error}:
+    for K in {key: value for key, value in all_diff.items() if value==smallest_error}:
         return K
 
-
-print(autocorrect('stilter', ['modernizer', 'posticum', 'undiscernible', 'heterotrophic', 'waller', 'marque', 'dephosphorization'], lambda x, y, lim: min(lim + 1, abs(len(x) - len(y))), 1))
+abs_diff = lambda w1, w2, limit: abs(len(w2) - len(w1))
+print(autocorrect("cul", ["culture", "cult", "cultivate"], abs_diff, 0))
 
     # END PROBLEM 5
 
@@ -241,7 +242,19 @@ def furry_fixes(typed, source, limit):
     5
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    if len(typed)==0 and len(source)!=0:
+        return len(source)
+    if len(typed)!=0 and len(source)==0:
+        return len(typed)
+    if len(typed)==0 and len(source)==0:
+        return 0
+    reducedtyped="".join(list(typed)[1:])
+    reducedsource="".join(list(source)[1:])
+    if list(typed)[0]==list(source)[0]:
+        return 0+furry_fixes(reducedtyped, reducedsource, limit)
+    if limit==0:
+        return len(typed) if len(typed)>=len(source) else len(source)
+    return 1+furry_fixes(reducedtyped, reducedsource, limit-1)
     # END PROBLEM 6
 
 
@@ -262,25 +275,29 @@ def minimum_mewtations(typed, source, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
-    assert False, 'Remove this line'
-    if ___________: # Base cases should go here, you may add more base cases as needed.
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-    # Recursive cases should go below here
-    if ___________: # Feel free to remove or add additional cases
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
+    print('this is typed', "'", typed, "'", 'this is source', "'", source, "'")
+    if len(typed)==0 and len(source)==0 :
+        print('this is the first step')
+        return 0
+    if len(typed)==0 or len(source)==0:
+        print('this is the second step')
+        return 1
     else:
-        add = ... # Fill in these lines
-        remove = ...
-        substitute = ...
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
+        print('this is the third step')
+        add = "".join(list(source[0])+list(typed)[1:]) 
+        remove = "".join(list(typed)[2:])
+        substitute = "".join(list(source[0])+list(typed)[2:])
+        if list(typed)[0]==list(source)[0]:
+            print('this is the first step in the third step')
+            return minimum_mewtations("".join(list(typed)[1:]), "".join(list(source)[1:]), limit)
+        if limit==0:
+            print('this is the second step in the third step')
+            return 1
+        print('this is the third step in the third step')
+        return min(1+minimum_mewtations(add, source, limit-1), 1+minimum_mewtations(remove, source, limit-1), 1+minimum_mewtations(substitute, source, limit-1))
 
 
+print(minimum_mewtations("purrin", "purring", 1))
 # Ignore the line below
 minimum_mewtations = count(minimum_mewtations)
 
