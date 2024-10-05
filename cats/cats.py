@@ -275,29 +275,26 @@ def minimum_mewtations(typed, source, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
-    print('this is typed', "'", typed, "'", 'this is source', "'", source, "'")
-    if len(typed)==0 and len(source)==0 :
-        print('this is the first step')
-        return 0
-    if len(typed)==0 or len(source)==0:
-        print('this is the second step')
+    if limit==0  or len(typed)==0 or len(source)==0:
+        print('A')
+        if len(typed)==0 and len(source)==0:
+            print('B')
+            return 0
+        print('C')
         return 1
+    if typed[0]==source[0]:
+        print('D')
+        return minimum_mewtations(typed[1:], source[1:], limit)
     else:
-        print('this is the third step')
-        add = "".join(list(source[0])+list(typed)[1:]) 
-        remove = "".join(list(typed)[2:])
-        substitute = "".join(list(source[0])+list(typed)[2:])
-        if list(typed)[0]==list(source)[0]:
-            print('this is the first step in the third step')
-            return minimum_mewtations("".join(list(typed)[1:]), "".join(list(source)[1:]), limit)
-        if limit==0:
-            print('this is the second step in the third step')
-            return 1
-        print('this is the third step in the third step')
-        return min(1+minimum_mewtations(add, source, limit-1), 1+minimum_mewtations(remove, source, limit-1), 1+minimum_mewtations(substitute, source, limit-1))
+        print('E')
+        add = source[0]+typed[1:]
+        remove = typed[2:]
+        substitute = source[0]+typed[2:]
+        return min(minimum_mewtations(add, source, limit-1)+1,minimum_mewtations(remove, source, limit-1)+1, minimum_mewtations(substitute, source, limit-1)+1)
+
+print(minimum_mewtations('a', 'bce', 10))
 
 
-print(minimum_mewtations("purrin", "purring", 1))
 # Ignore the line below
 minimum_mewtations = count(minimum_mewtations)
 
