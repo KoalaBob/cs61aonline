@@ -213,8 +213,7 @@ def autocorrect(typed_word, word_list, diff_function, limit):
     for K in {key: value for key, value in all_diff.items() if value==smallest_error}:
         return K
 
-abs_diff = lambda w1, w2, limit: abs(len(w2) - len(w1))
-print(autocorrect("cul", ["culture", "cult", "cultivate"], abs_diff, 0))
+
 
     # END PROBLEM 5
 
@@ -275,24 +274,30 @@ def minimum_mewtations(typed, source, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
+
     if limit==0  or len(typed)==0 or len(source)==0:
-        print('A')
-        if len(typed)==0 and len(source)==0:
-            print('B')
+        if typed==source:
             return 0
-        print('C')
+
+        if len(typed)==0 and len(source)==0:
+            return 0
+
+        if len(typed)==0 or len(source)==0:
+            return len(typed) if len(typed)> len(source) else len(source)
+
         return 1
     if typed[0]==source[0]:
-        print('D')
+
         return minimum_mewtations(typed[1:], source[1:], limit)
     else:
-        print('E')
-        add = source[0]+typed[1:]
-        remove = typed[2:]
-        substitute = source[0]+typed[2:]
+
+        add = source[0]+typed
+        remove = typed[1:]
+        substitute = source[0]+typed[1:]
+
         return min(minimum_mewtations(add, source, limit-1)+1,minimum_mewtations(remove, source, limit-1)+1, minimum_mewtations(substitute, source, limit-1)+1)
 
-print(minimum_mewtations('a', 'bce', 10))
+print(minimum_mewtations('ward', 'crier', 10))
 
 
 # Ignore the line below
@@ -337,7 +342,14 @@ def report_progress(typed, source, user_id, upload):
     0.2
     """
     # BEGIN PROBLEM 8
-    "*** YOUR CODE HERE ***"
+    count=0
+    for i in range(len(typed)):
+        if typed[i]==source[i]:
+            count+=1
+        else:
+            break
+    upload({'id': user_id, 'progress': count/len(source)})
+    return  count/len(source)  
     # END PROBLEM 8
 
 
@@ -359,12 +371,18 @@ def time_per_word(words, timestamps_per_player):
     >>> result['times']
     [[6, 3, 6, 2], [10, 6, 1, 2]]
     """
+    times=[]
     tpp = timestamps_per_player  # A shorter name (for convenience)
-    # BEGIN PROBLEM 9
-    times = []  # You may remove this line
+    # BE    GIN PROBLEM 9
+    for I in range(len(tpp)):
+        alntba=[]
+        for i in range(len(tpp[0])):
+            if i==len(tpp[0])-1:
+                break
+            alntba+=[tpp[I][i+1]-tpp[I][i]]
+        times+=[alntba]
     # END PROBLEM 9
     return {'words': words, 'times': times}
-
 
 def fastest_words(words_and_times):
     """Return a list of lists indicating which words each player typed fastests.
@@ -388,7 +406,15 @@ def fastest_words(words_and_times):
     player_indices = range(len(times))  # contains an *index* for each player
     word_indices = range(len(words))    # contains an *index* for each word
     # BEGIN PROBLEM 10
-    "*** YOUR CODE HERE ***"
+    final=[[] for i in player_indices]
+    for I in word_indices:
+        compare=[eachwordtime[I] for eachwordtime in times]
+        for i in player_indices:
+            if get_time(times, player_indices[i], I)==min(compare):
+                final[i]+=[words[I]]
+                break
+    return final
+            
     # END PROBLEM 10
 
 
@@ -415,6 +441,10 @@ def get_time(times, player_num, word_index):
 
 
 enable_multiplayer = False  # Change to True when you're ready to race.
+
+p0 = [5, 1, 3]
+p1 = [4, 1, 6]
+print(fastest_words({'words': ['Just', 'have', 'fun'], 'times': [p0, p1]}))
 
 ##########################
 # Command Line Interface #
