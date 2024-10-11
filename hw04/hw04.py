@@ -12,7 +12,11 @@ def shuffle(s):
     ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
     """
     assert len(s) % 2 == 0, 'len(seq) must be even'
-    "*** YOUR CODE HERE ***"
+    firsthalf=[i for i in s][:len(s)//2]
+    secondhalf=[i for i in s][len(s)//2:]
+    L=[]
+    [L.extend([firsthalf[i], secondhalf[i]]) for i in range(len(s)//2)]
+    return L
 
 
 def deep_map(f, s):
@@ -37,7 +41,20 @@ def deep_map(f, s):
     >>> s3 is s2[1]
     True
     """
-    "*** YOUR CODE HERE ***"
+    def g(func, L):
+        if all(list(map(lambda x: type(x)!=list, L))):
+            return list(map(func, L))
+        # return [func(item) if type(item)!=list else g(func, item) for item in L]
+        return list(map(lambda x: func(x) if type(x)!=list else g(func, x), L))
+    lst=g(f, s)
+    s.clear()
+    [s.append(item) for item in lst]
+
+
+s = [3, [1, [4, [1]]]]
+s1 = s[1]
+deep_map(lambda x: x + 1, s)
+print(s[1]==s1)
 
 
 HW_SOURCE_FILE=__file__
@@ -46,12 +63,12 @@ HW_SOURCE_FILE=__file__
 def planet(mass):
     """Construct a planet of some mass."""
     assert mass > 0
-    "*** YOUR CODE HERE ***"
+    return ['planet', mass]
 
 def mass(p):
     """Select the mass of a planet."""
     assert is_planet(p), 'must call mass on a planet'
-    "*** YOUR CODE HERE ***"
+    return p[1]
 
 def is_planet(p):
     """Whether p is a planet."""
