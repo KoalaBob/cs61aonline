@@ -42,19 +42,28 @@ def deep_map(f, s):
     True
     """
     def g(func, L):
-        if all(list(map(lambda x: type(x)!=list, L))):
-            return list(map(func, L))
-        # return [func(item) if type(item)!=list else g(func, item) for item in L]
-        return list(map(lambda x: func(x) if type(x)!=list else g(func, x), L))
-    lst=g(f, s)
-    s.clear()
-    [s.append(item) for item in lst]
+        # if all(list(map(lambda x: type(x)!=list, L))):
+        #     return list(map(func, L))
+        # return list(map(lambda x: func(x) if type(x)!=list else g(func, x), L))
+        # if all(list(map(lambda x: type(x)!=list, L))):
+        #     for i in range(len(L)):
+        #         L[i]=func(L[i])
+        for i in range(len(L)):
+            if type(L[i])!=list:
+                L[i]=func(L[i])
+            else:
+                g(func, L[i])
+    return g(f, s)
 
+# s = [3, [1, [4, [1]]]]
+# s1 = s[1]
+# deep_map(lambda x: x + 1, s)
 
-s = [3, [1, [4, [1]]]]
-s1 = s[1]
-deep_map(lambda x: x + 1, s)
-print(s[1]==s1)
+six = [1, 2, [3, [4], 5], 6]
+
+deep_map(lambda x: x * x, six)
+
+print(six)
 
 
 HW_SOURCE_FILE=__file__
@@ -120,8 +129,15 @@ def balanced(m):
     >>> check(HW_SOURCE_FILE, 'balanced', ['Index'])
     True
     """
-    "*** YOUR CODE HERE ***"
-
+    if is_planet(end(left(m))) or is_planet(end(right(m))):    
+        if is_planet(end(left(m))) and is_planet(end(right(m))):
+            return mass(end(left(m)))*length(left(m))==mass(end(right(m)))*length(right(m))
+        else:
+            if is_planet(end(left(m))) and not is_planet(end(right(m))):
+                return mass(end(left(m)))*length(left(m))==total_mass(end(right(m)))*length(right(m)) and balanced(end(right(m)))
+            if not is_planet(end(left(m))) and is_planet(end(right(m))):
+                return mass(end(left(m)))*length(left(m))==total_mass(end(right(m)))*length(right(m)) and balanced(end(left(m)))
+    return total_mass(end(left(m)))*length(left(m))==total_mass(end(right(m)))*length(right(m)) and balanced(end(left(m))) and balanced(end(right(m)))
 
 def berry_finder(t):
     """Returns True if t contains a node with the value 'berry' and 
