@@ -156,8 +156,15 @@ def berry_finder(t):
     >>> berry_finder(t)
     True
     """
-    "*** YOUR CODE HERE ***"
-
+    if label(t)=='berry':
+        return True
+    elif not is_leaf(t):
+        Booleanlist=[]
+        for T in branches(t):
+            Booleanlist.append(berry_finder(T))
+        return any(Booleanlist)
+    else:
+        return False
 
 HW_SOURCE_FILE=__file__
 
@@ -171,8 +178,13 @@ def max_path_sum(t):
     >>> max_path_sum(t2) # 5, 2, 10
     17
     """
-    "*** YOUR CODE HERE ***"
-
+    if is_leaf(t):
+        return label(t)
+    else:
+        numberlst=[]
+        for T in branches(t):
+            numberlst.append(max_path_sum(T))
+        return label(t)+max(numberlst)
 
 def mobile(left, right):
     """Construct a mobile from a left arm and a right arm."""
