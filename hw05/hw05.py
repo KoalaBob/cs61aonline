@@ -115,7 +115,7 @@ def yield_paths(t, value):
     [[0, 2], [0, 2, 1, 2]]
     """
     if label(t) == value:
-        yield [t]
+        yield [label(t)]
     for b in branches(t):
         for twig in yield_paths(b, value):
             yield [label(t)]+ twig
