@@ -101,6 +101,16 @@ def without(s, i):
     True
     """
     "*** YOUR CODE HERE ***"
+    if s.rest==Link.empty:
+        if i==0:
+            return Link.empty
+        return s
+    else:
+        if i==0:
+            return s.rest
+        return Link(s.first, without(s.rest, i-1))
+
+
 
 
 def duplicate_link(s, val):
@@ -120,6 +130,21 @@ def duplicate_link(s, val):
     Link(1, Link(2, Link(2, Link(2, Link(2, Link(3))))))
     """
     "*** YOUR CODE HERE ***"
+    def f(ns):
+        if ns.rest==Link.empty:
+            if ns.first==val:
+                ns.rest=Link(val)
+                return None
+            else:
+                return None
+        elif ns.first==val:
+            ns.rest=Link(val, ns.rest)
+            return f(ns.rest.rest)
+        else:
+            return f(ns.rest)           
+    return f(s)
+
+
 
 
 class Link:
@@ -163,3 +188,7 @@ class Link:
             self = self.rest
         return string + str(self.first) + '>'
 
+
+L=Link(1,Link(2,Link(3)))
+L=Link(0, L.rest)
+print(L)

@@ -46,12 +46,14 @@ class Place:
         return self.name
 
 
+
+
 class Insect:
     """An Insect, the base class of Ant and Bee, has health and a Place."""
 
     next_id = 0  # Every insect gets a unique id number
     damage = 0
-    # ADD CLASS ATTRIBUTES HERE
+    is_waterproof=False# ADD CLASS ATTRIBUTES HERE
 
     def __init__(self, health, place=None):
         """Create an Insect with a health amount and a starting PLACE."""
@@ -99,6 +101,7 @@ class Ant(Insect):
     implemented = False  # Only implemented Ant classes should be instantiated
     food_cost = 0
     is_container = False
+    damage_had_been_doubled=False
     # ADD CLASS ATTRIBUTES HERE
 
     def __init__(self, health=1):
@@ -378,6 +381,23 @@ class BodyguardAnt(ContainerAnt):
 
 # BEGIN Problem 9
 # The TankAnt class
+class TankAnt(ContainerAnt):
+    damage=1 
+    food_cost=6
+    implemented=True
+    name='Tank'
+
+
+    def __init__(self, health=2):
+        super().__init__(health)
+    def action(self, gamestate):
+        lst=list(range(len(self.place.bees)))
+        L=list(map(lambda a: a-len(lst),lst))
+        for i in L:
+            self.place.bees[i].reduce_health(self.damage)
+        if self.ant_contained!=None:
+            self.ant_contained.action(gamestate)
+
 # END Problem 9
 
 
@@ -389,11 +409,22 @@ class Water(Place):
         its health to 0."""
         # BEGIN Problem 10
         "*** YOUR CODE HERE ***"
+        super().add_insect(insect)
+        if insect.is_waterproof==False:
+            insect.reduce_health(insect.health)
         # END Problem 10
 
 # BEGIN Problem 11
 # The ScubaThrower class
+class ScubaThrower(ThrowerAnt):
+    food_cost=6 
+    implemented=True
+    is_waterproof=True 
+    name='Scuba'
 # END Problem 11
+
+
+
 
 
 class QueenAnt(ThrowerAnt):
@@ -403,8 +434,10 @@ class QueenAnt(ThrowerAnt):
     food_cost = 7
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 12
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem 12
+    def __init__(self, health=1):
+        super().__init__(health)
 
     def action(self, gamestate):
         """A queen ant throws a leaf, but also doubles the damage of ants
@@ -412,6 +445,38 @@ class QueenAnt(ThrowerAnt):
         """
         # BEGIN Problem 12
         "*** YOUR CODE HERE ***"
+        super().action(gamestate)
+        def double_damage(p):
+            if p.exit!=None:
+                antbehind=p.exit.ant
+                if isinstance(antbehind, ContainerAnt):
+                    if hasattr(antbehind, 'damage'):
+                        if not antbehind.damage_had_been_doubled:
+                            antbehind.damage*=2
+                            antbehind.damage_had_been_doubled=True
+                    if antbehind.ant_contained!=None:
+                        if hasattr(antbehind.ant_contained, 'damage'):
+                            if not antbehind.ant_contained.damage_had_been_doubled:
+                                antbehind.ant_contained.damage*=2
+                                antbehind.ant_contained.damage_had_been_doubled=True
+                                double_damage(p.exit)
+                            else:
+                                double_damage(p.exit)
+                        else:
+                            double_damage(p.exit)
+                    else:
+                        double_damage(p.exit)
+                elif hasattr(antbehind, 'damage'):
+                    if not antbehind.damage_had_been_doubled:
+                        antbehind.damage*=2
+                        antbehind.damage_had_been_doubled=True
+                        double_damage(p.exit)
+                    else:
+                        double_damage(p.exit)
+                else:
+                    double_damage(p.exit)
+        double_damage(self.place)
+                
         # END Problem 12
 
     def reduce_health(self, amount):
@@ -420,6 +485,9 @@ class QueenAnt(ThrowerAnt):
         """
         # BEGIN Problem 12
         "*** YOUR CODE HERE ***"
+        super().reduce_health(amount)
+        if self.health==0:
+            ants_lose()
         # END Problem 12
 
 
