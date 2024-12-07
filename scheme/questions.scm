@@ -6,9 +6,17 @@
 ;; Problem 15
 ;; Returns a list of two-element lists
 (define (enumerate s)
+
   ; BEGIN PROBLEM 15
-  'replace-this-line
-  )
+(define (enumerate2 n l)
+(cond 
+((= n (length s)) (cons (list (- n 1) (car l)) nil)      )
+(else (cons (list (- n 1)  (car l))  (enumerate2 (+ n 1) (cdr l) )   )     )
+))
+
+(if (null? s)  nil  (enumerate2 1 s))
+
+)
   ; END PROBLEM 15
 
 ;; Problem 16
@@ -17,7 +25,14 @@
 ;; the merged lists.
 (define (merge ordered? s1 s2)
   ; BEGIN PROBLEM 16
-  'replace-this-line
+(cond 
+((null? s1) s2)
+((null? s2) s1)
+((= (car s1) (car s2))  (cons (car s1) (merge ordered? (cdr s1) s2 ))  )
+((ordered? (car s1) (car s2)) (cons (car s1) (merge ordered? (cdr s1) s2)) )
+(else (cons (car s2) (merge ordered? s1 (cdr s2))))
+
+)
   )
   ; END PROBLEM 16
 
