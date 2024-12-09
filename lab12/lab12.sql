@@ -38,8 +38,8 @@ CREATE TABLE sharing AS
 
 
 CREATE TABLE pairs AS
-  SELECT a.room, b.room , a.seats+b.seats
-  FROM  sizes AS a, sizes AS b WHERE a.room != b.room and (a.seats + b.seats)>=1000
+  SELECT a.room || " and " || b.room || " together have " || (a.seats+b.seats) || ' seats'
+  FROM  sizes AS a, sizes AS b WHERE a.room < b.room and (a.seats + b.seats)>=1000
   ORDER BY a.seats+b.seats DESC;
   -- SELECT a.room || "and" || "together have" || a.seats+b.seats || "seats" AS rooms
   -- FROM  sizes AS a, sizes AS b WHERE a.room != b.room and (a.seats + b.seats)>=1000
